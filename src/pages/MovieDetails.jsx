@@ -23,24 +23,46 @@ const MovieDetails = () => {
   }, [id]);
 
   if (isLoading) {
-    return <p>Carregando detalhes do filme...</p>;
+    return <p className="text-center text-gray-500">Carregando detalhes do filme...</p>;
   }
 
   if (!movie) {
-    return <p>Detalhes do filme não encontrados.</p>;
+    return <p className="text-center text-red-500">Detalhes do filme não encontrados.</p>;
   }
 
   return (
-    <div>
-      <h1>{movie.title}</h1>
-      <img
-        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-        alt={movie.title}
-      />
-      <p><strong>Sinopse:</strong> {movie.overview}</p>
-      <p><strong>Data de lançamento:</strong> {movie.release_date}</p>
-      <p><strong>Nota:</strong> {movie.vote_average}</p>
-      <p><strong>Gêneros:</strong> {movie.genres.map((genre) => genre.name).join(', ')}</p>
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="col-span-1">
+          <img
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={movie.title}
+            className="w-full rounded-lg shadow-md"
+          />
+        </div>
+        <div className="col-span-2">
+          <h1 className="text-4xl font-bold mb-4">{movie.title}</h1>
+          <p className="text-gray-700 mb-4">
+            <strong>Sinopse:</strong> {movie.overview}
+          </p>
+          <p className="text-gray-700 mb-2">
+            <strong>Data de lançamento:</strong> {movie.release_date}
+          </p>
+          <p className="text-gray-700 mb-2">
+            <strong>Nota:</strong> {movie.vote_average} / 10
+          </p>
+          <p className="text-gray-700 mb-2">
+            <strong>Gêneros:</strong>{' '}
+            {movie.genres.map((genre) => genre.name).join(', ')}
+          </p>
+          <button
+            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            onClick={() => window.history.back()}
+          >
+            Voltar
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
