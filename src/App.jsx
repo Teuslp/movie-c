@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
+import MovieDetails from './pages/MovieDetails'
 
 const App = () => {
   const [favorites, setFavorites] = useState([]);
   const [message, setMessage] = useState('');
-
-
-
 
   // Recupera favoritos do localStorage ao carregar o app
   useEffect(() => {
@@ -49,6 +47,10 @@ const App = () => {
         <Route
           path="/favorites"
           element={<Favorites favorites={favorites} toggleFavorite={toggleFavorite} />}
+        />
+        <Route 
+        path="/movie/:id" 
+        element={<MovieDetails />}
         />
       </Routes>
     </Router>
