@@ -3,7 +3,11 @@ import api from '../services/api';
 
 const Home = ({ toggleFavorite, favorites }) => {
   const [movies, setMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [genres, setGenres] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState('');
 
+  // Buscar filmes populares
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -17,11 +21,48 @@ const Home = ({ toggleFavorite, favorites }) => {
     fetchMovies();
   }, []);
 
+  // Buscar gêneros de filmes
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await api.get('/genre/movie/list');
+        setGenres(response.data.genres);
+      } catch (error) {
+        console.error('Erro ao buscar gêneros:', error);
+      }
+    };
+
+    fetchGenres();
+  }, []);
+
+  // Filtrar filmes com base na busca e no gênero selecionado
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (selectedGenre === '' || movie.genre_ids.includes(Number(selectedGenre)))
+  );
+
   return (
     <div>
       <h1>Filmes Populares</h1>
+      <input
+        type="text"
+        placeholder="Buscar filmes..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <select
+        value={selectedGenre}
+        onChange={(e) => setSelectedGenre(e.target.value)}
+      >
+        <option value="">Todos os Gêneros</option>
+        {genres.map((genre) => (
+          <option key={genre.id} value={genre.id}>
+            {genre.name}
+          </option>
+        ))}
+      </select>
       <ul>
-        {movies.map((movie) => (
+        {filteredMovies.map((movie) => (
           <li key={movie.id}>
             <h2>{movie.title}</h2>
             <img
