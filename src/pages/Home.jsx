@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import { Link } from 'react-router-dom';
 
+
 const Home = ({ toggleFavorite, favorites }) => {
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Controle do dropdown
+
 
   // Buscar filmes populares
   useEffect(() => {
@@ -20,8 +22,10 @@ const Home = ({ toggleFavorite, favorites }) => {
       }
     };
 
+
     fetchMovies();
   }, []);
+
 
   // Buscar gêneros de filmes
   useEffect(() => {
@@ -34,8 +38,10 @@ const Home = ({ toggleFavorite, favorites }) => {
       }
     };
 
+
     fetchGenres();
   }, []);
+
 
   // Filtrar filmes com base na busca e no gênero selecionado
   const filteredMovies = movies.filter(
@@ -44,9 +50,11 @@ const Home = ({ toggleFavorite, favorites }) => {
       (selectedGenre === '' || movie.genre_ids.includes(Number(selectedGenre)))
   );
 
+
   return (
     <div className="container mx-auto px-4">
       <h1 className="text-4xl font-bold text-center my-6">Filmes Populares</h1>
+
 
       {/* Campo de busca */}
       <input
@@ -54,49 +62,50 @@ const Home = ({ toggleFavorite, favorites }) => {
         placeholder="Buscar filmes..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded-md mb-4"
+        className="w-full p-2 border border-gray-300 rounded-md mb-4 text-black bg-white"
       />
+
 
       {/* Dropdown customizado */}
       <div className="relative mb-6">
-        <button
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="w-full bg-white border border-gray-300 rounded-md p-2 text-left"
+  <button
+    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+    className="w-full bg-white text-black border border-gray-300 rounded-md p-2 text-left"
+  >
+    {selectedGenre
+      ? genres.find((genre) => genre.id === Number(selectedGenre))?.name || 'Todos os Gêneros'
+      : 'Todos os Gêneros'}
+    <span className="float-right">▼</span>
+  </button>
+  {isDropdownOpen && (
+    <ul
+      className="absolute z-10 bg-white text-black border border-gray-300 rounded-md mt-1 w-full max-h-60 overflow-y-auto shadow-lg"
+    >
+      <li
+        className="p-2 hover:bg-gray-100 cursor-pointer"
+        onClick={() => {
+          setSelectedGenre('');
+          setIsDropdownOpen(false);
+        }}
+      >
+        Todos os Gêneros
+      </li>
+      {genres.map((genre) => (
+        <li
+          key={genre.id}
+          className="p-2 hover:bg-gray-100 cursor-pointer"
+          onClick={() => {
+            setSelectedGenre(genre.id.toString());
+            setIsDropdownOpen(false);
+          }}
         >
-          {selectedGenre
-            ? genres.find((genre) => genre.id === Number(selectedGenre))?.name || 'Todos os Gêneros'
-            : 'Todos os Gêneros'}
-          <span className="float-right">▼</span>
-        </button>
+          {genre.name}
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
 
-        {isDropdownOpen && (
-          <ul
-            className="absolute z-10 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-60 overflow-y-auto shadow-lg"
-          >
-            <li
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                setSelectedGenre('');
-                setIsDropdownOpen(false);
-              }}
-            >
-              Todos os Gêneros
-            </li>
-            {genres.map((genre) => (
-              <li
-                key={genre.id}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => {
-                  setSelectedGenre(genre.id.toString());
-                  setIsDropdownOpen(false);
-                }}
-              >
-                {genre.name}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
 
       {/* Lista de filmes */}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -125,5 +134,6 @@ const Home = ({ toggleFavorite, favorites }) => {
     </div>
   );
 };
+
 
 export default Home;
