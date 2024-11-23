@@ -20,7 +20,7 @@ const Favorites = ({ favorites, toggleFavorite }) => {
                 alt={movie.title}
                 className="w-full h-auto rounded-md"
               />
-              <p className="mt-2 text-gray-700">Nota: {movie.vote_average}</p>
+              <p className="mt-2 text-white-700">Nota: {movie.vote_average}</p>
               <button
                 onClick={() => toggleFavorite(movie)}
                 className="mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"

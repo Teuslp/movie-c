@@ -42,16 +42,16 @@ const MovieDetails = () => {
         </div>
         <div className="col-span-2">
           <h1 className="text-4xl font-bold mb-4">{movie.title}</h1>
-          <p className="text-gray-700 mb-4">
+          <p className="text-white-700 mb-4">
             <strong>Sinopse:</strong> {movie.overview}
           </p>
-          <p className="text-gray-700 mb-2">
+          <p className="text-white-700 mb-2">
             <strong>Data de lançamento:</strong> {movie.release_date}
           </p>
-          <p className="text-gray-700 mb-2">
+          <p className="text-white-700 mb-2">
             <strong>Nota:</strong> {movie.vote_average} / 10
           </p>
-          <p className="text-gray-700 mb-2">
+          <p className="text-white-700 mb-2">
             <strong>Gêneros:</strong>{' '}
             {movie.genres.map((genre) => genre.name).join(', ')}
           </p>

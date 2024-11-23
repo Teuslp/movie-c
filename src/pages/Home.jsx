@@ -71,15 +71,21 @@ const Home = ({ toggleFavorite, favorites }) => {
   <button
     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
     className="w-full bg-white text-black border border-gray-300 rounded-md p-2 text-left"
+    aria-expanded={isDropdownOpen} // Indica se o dropdown está aberto ou fechado
+    aria-controls="genre-dropdown" // Associa o botão ao menu
+    aria-label="Selecionar gênero"
   >
     {selectedGenre
       ? genres.find((genre) => genre.id === Number(selectedGenre))?.name || 'Todos os Gêneros'
       : 'Todos os Gêneros'}
     <span className="float-right">▼</span>
   </button>
+
   {isDropdownOpen && (
     <ul
+      id="genre-dropdown"
       className="absolute z-10 bg-white text-black border border-gray-300 rounded-md mt-1 w-full max-h-60 overflow-y-auto shadow-lg"
+      role="menu" // Define o propósito do elemento como menu
     >
       <li
         className="p-2 hover:bg-gray-100 cursor-pointer"
@@ -87,6 +93,8 @@ const Home = ({ toggleFavorite, favorites }) => {
           setSelectedGenre('');
           setIsDropdownOpen(false);
         }}
+        role="menuitem" // Define cada item como parte do menu
+        tabIndex="0" // Torna o item navegável pelo teclado
       >
         Todos os Gêneros
       </li>
@@ -98,6 +106,8 @@ const Home = ({ toggleFavorite, favorites }) => {
             setSelectedGenre(genre.id.toString());
             setIsDropdownOpen(false);
           }}
+          role="menuitem"
+          tabIndex="0"
         >
           {genre.name}
         </li>
@@ -105,7 +115,6 @@ const Home = ({ toggleFavorite, favorites }) => {
     </ul>
   )}
 </div>
-
 
       {/* Lista de filmes */}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -119,7 +128,7 @@ const Home = ({ toggleFavorite, favorites }) => {
                 className="w-full h-auto rounded-md"
               />
             </Link>
-            <p className="mt-2 text-gray-700">Nota: {movie.vote_average}</p>
+            <p className="mt-2 text-white-700">Nota: {movie.vote_average}</p>
             <button
               onClick={() => toggleFavorite(movie)}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
