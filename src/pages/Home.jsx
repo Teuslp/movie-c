@@ -8,15 +8,28 @@ const Home = ({ toggleFavorite, favorites }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Controle do dropdown
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(localStorage.getItem('currentPage')) || 1
+  );
+  const [totalPages, setTotalPages] = useState(1);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
 
 
   // Buscar filmes populares
   useEffect(() => {
     const fetchMovies = async () => {
-      try {
-        const response = await api.get('/movie/popular');
+      try {   
+                                      //Simula a query param abaixo
+                                      //'/movie/popular?page=variável de controle de página
+        const response = await api.get('/movie/popular',{
+          params: { page: currentPage },
+        });
         setMovies(response.data.results);
+        setTotalPages(response.data.total_pages);
+
+        localStorage.setItem('currentPage', currentPage);
+      
       } catch (error) {
         console.error('Erro ao buscar filmes:', error);
       }
@@ -24,7 +37,7 @@ const Home = ({ toggleFavorite, favorites }) => {
 
 
     fetchMovies();
-  }, []);
+  }, [currentPage]);
 
 
   // Buscar gêneros de filmes
@@ -118,7 +131,8 @@ const Home = ({ toggleFavorite, favorites }) => {
 
       {/* Lista de filmes */}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredMovies.map((movie) => (
+        {filteredMovies.length > 0 ? (
+          filteredMovies.map((movie) => (
           <li key={movie.id} className="border border-gray-200 rounded-lg shadow-md p-4">
             <Link to={`/movie/${movie.id}`} className="block">
               <h2 className="text-xl font-semibold mb-2">{movie.title}</h2>
@@ -138,11 +152,36 @@ const Home = ({ toggleFavorite, favorites }) => {
                 : 'Adicionar aos Favoritos'}
             </button>
           </li>
-        ))}
+        ))) : (
+          <p>Nenhum filme encontrado</p>
+        )}
       </ul>
+      {/* Paginação */}
+      <div className="flex justify-center items-center mt-6 space-x-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className={`py-2 px-4 rounded-md ${
+            currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+          } text-white`}
+        >
+          Anterior
+        </button>
+        <span className="font-semibold">
+          Página {currentPage} de {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className={`py-2 px-4 rounded-md ${
+            currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+          } text-white`}
+        >
+          Próxima
+        </button>
+      </div>
     </div>
   );
 };
-
 
 export default Home;
